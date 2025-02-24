@@ -29,13 +29,13 @@ class HorseTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"", " ", "\t", "\n", "\f", "\r"}) //"0x0B"
+    @ValueSource(strings = {"", " ", "\t", "\n", "\f", "\r", "\u000B", "   "})
     void whenHorseNameInvalid(String name) {
         assertThrows(IllegalArgumentException.class, () -> horse = new Horse(name, 0, 0));
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"", " ", "\t", "\n", "\f", "\r", "\u000B"})
+    @ValueSource(strings = {"", " ", "\t", "\n", "\f", "\r", "\u000B", "   "})
     void whenHorseNameInvalidCheckMessage(String name) {
         Throwable throwable = assertThrows(IllegalArgumentException.class,
                 () -> horse = new Horse(name, 0, 0));
@@ -100,8 +100,10 @@ class HorseTest {
         try (MockedStatic<Horse> horseStatic = Mockito.mockStatic(Horse.class)){
             horseStatic.when(() -> Horse.getRandomDouble(0.2, 0.9)).thenReturn(randDouble);
             horse = new Horse("flash", 10, 10);
+
             horse.move();
-            assertEquals(horse.getDistance(), 10 + 10 * randDouble);
+
+            assertEquals(10 + 10 * randDouble, horse.getDistance());
         }
     }
 

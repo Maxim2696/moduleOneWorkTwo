@@ -52,20 +52,25 @@ class HippodromeTest {
         for (int i = 0; i < 30; i++) {
             horses.add(new Horse("" + i, i));
         }
+
         hippodrome = new Hippodrome(horses);
         Horse maxDistance = horses.stream().max(Comparator.comparing(Horse::getDistance)).get();
+
         assertSame(maxDistance, hippodrome.getWinner());
     }
 
     @Test
     void whenHorseOnHippodromeMove() {
         List<Horse> horses = new ArrayList<>();
-        Horse horse = Mockito.mock(Horse.class);
         for (int i = 0; i < 50; i++) {
-            horses.add(horse);
+            horses.add(Mockito.mock(Horse.class));
         }
         hippodrome = new Hippodrome(horses);
+
         hippodrome.move();
-        Mockito.verify(horse, Mockito.times(50)).move();
+
+        for (Horse horse : hippodrome.getHorses()) {
+            Mockito.verify(horse).move();
+        }
     }
 }
